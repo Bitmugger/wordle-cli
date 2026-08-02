@@ -7,30 +7,31 @@ GitHub repo: https://github.com/Bitmugger/wordle-cli
 
 ## Terminology
 - "tickets" / "stories" = GitHub Issues at https://github.com/Bitmugger/wordle-cli/issues
-- "chapter" = one narrative arc, made up of a set of themed words
-- "puzzle" = one five-letter word guess challenge
+- "project board" = GitHub Project at https://github.com/users/Bitmugger/projects/2
 
 ## GitHub Issue Format
-Every issue body must start with this metadata header:
-```
-**Status:** Open | In Progress | Done
-**Priority:** High | Medium | Low
-**Estimate:** Small | Medium | Large
-**Branch:** —
-**Commits:** —
-```
-
-Issues should be written as user stories where applicable:
+Issue bodies should be written as user stories:
 > As a [role], I want [feature] so that [benefit].
 
-Each story must include **Acceptance Criteria** (bulleted checklist) and a **Notes** section for implementation hints or open questions.
+Each issue must include **Acceptance Criteria** (bulleted checklist) and a **Notes** section for implementation hints or open questions. Do NOT embed Status/Priority/Estimate/Branch/Commits in the issue body — these are tracked as fields in the GitHub Project instead.
+
+## GitHub Project Fields
+All metadata is tracked in the GitHub Project (https://github.com/users/Bitmugger/projects/2), not the issue body. When starting or completing work, update the project fields via `gh project item-edit`.
 
 ### Field Definitions
-- **Status** — current state. Valid values: `Open` → `In Progress` → `Merge-Needed` → `Done`.
-- **Priority** — `High` = core/blocking, `Medium` = important but not blocking, `Low` = polish or stretch goals.
-- **Estimate** — `Small` = a few minutes to an hour, `Medium` = a few hours, `Large` = a day or more.
-- **Branch** — the git branch being used for this ticket (e.g. `feature/1-word-list`). Update when work begins.
-- **Commits** — comma-separated short SHAs once work is merged.
+- **Status** — `Open` → `In Progress` → `Merge-Needed` → `Done`
+- **Priority** — `High` = core/blocking, `Medium` = important but not blocking, `Low` = polish or stretch goals
+- **Estimate** — `Small` = a few minutes to an hour, `Medium` = a few hours, `Large` = a day or more
+- **Branch** — the git branch for this ticket (e.g. `feature/9-game-engine`). Set when work begins.
+- **Commits** — comma-separated short SHAs. Set when merged.
+
+### Project IDs (for gh project item-edit)
+- Project ID: `PVT_kwHOAsX2m84BfLC8`
+- Status field: `PVTSSF_lAHOAsX2m84BfLC8zhZfzfg` (Open: `844cd1f0`, In Progress: `a257a8a1`, Merge-Needed: `9cc31244`, Done: `85bee622`)
+- Priority field: `PVTSSF_lAHOAsX2m84BfLC8zhZfzqc` (High: `8847130a`, Medium: `fb4f835b`, Low: `a58268b0`)
+- Estimate field: `PVTSSF_lAHOAsX2m84BfLC8zhZfzqg` (Small: `00b673fa`, Medium: `3197e763`, Large: `98b3f298`)
+- Branch field: `PVTF_lAHOAsX2m84BfLC8zhZfzqk`
+- Commits field: `PVTF_lAHOAsX2m84BfLC8zhZfzqo`
 
 ### Workflow
 1. When starting a ticket: create a branch named `feature/<id>-<short-slug>`, set Status → `In Progress`, set Branch field.

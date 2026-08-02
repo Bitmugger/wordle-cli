@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from main import get_guess, show_result, play_again, run_game
+from main import get_guess, show_result, play_again, run_game, PlayerQuit
 from game.engine import GameState
 from persistence.stats import DEFAULT_STATS
 
@@ -30,6 +30,43 @@ class TestGetGuess(unittest.TestCase):
         with patch("builtins.input", return_value="SLATE"):
             result = get_guess(WORD_LIST)
         self.assertEqual(result, "SLATE")
+
+
+class TestPlayerQuit(unittest.TestCase):
+    def test_quit_lowercase_raises(self):
+        with patch("builtins.input", return_value="quit"):
+            with self.assertRaises(PlayerQuit):
+                get_guess(WORD_LIST)
+
+    def test_exit_uppercase_raises(self):
+        with patch("builtins.input", return_value="EXIT"):
+            with self.assertRaises(PlayerQuit):
+                get_guess(WORD_LIST)
+
+    def test_quit_mixed_case_raises(self):
+        with patch("builtins.input", return_value="Quit"):
+            with self.assertRaises(PlayerQuit):
+                get_guess(WORD_LIST)
+
+    def test_valid_word_after_invalid_does_not_raise(self):
+        with patch("builtins.input", side_effect=["HI", "crane"]):
+            with patch("builtins.print"):
+                result = get_guess(WORD_LIST)
+        self.assertEqual(result, "CRANE")
+
+    def test_quit_does_not_update_stats(self):
+        fresh_stats = DEFAULT_STATS.copy()
+        with patch("random.choice", return_value="WORLD"):
+            with patch("builtins.input", return_value="quit"):
+                with patch("cli.renderer.render"):
+                    with patch("main.load_stats", return_value=fresh_stats):
+                        with patch("main.save_stats") as mock_save:
+                            try:
+                                run_game(WORD_LIST, ANSWERS)
+                            except PlayerQuit:
+                                pass
+        saved = mock_save.call_args[0][0]
+        self.assertEqual(saved["games_played"], 0)
 
 
 class TestShowResult(unittest.TestCase):

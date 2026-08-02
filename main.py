@@ -2,6 +2,13 @@ import argparse
 import random
 from pathlib import Path
 
+
+class PlayerQuit(Exception):
+    pass
+
+
+EXIT_COMMANDS = {"QUIT", "EXIT"}
+
 from words.words import load_word_list, is_valid_guess
 from game.engine import GameState, make_guess, is_game_over
 from cli.renderer import render
@@ -13,7 +20,9 @@ WORDS_DIR = Path(__file__).parent / "words"
 
 def get_guess(word_list: frozenset[str]) -> str:
     while True:
-        raw = input("Guess: ").strip().upper()
+        raw = input("Guess (or QUIT to exit): ").strip().upper()
+        if raw in EXIT_COMMANDS:
+            raise PlayerQuit
         if len(raw) != 5:
             print("  Word must be exactly 5 letters.")
         elif not is_valid_guess(raw, word_list):
@@ -51,10 +60,14 @@ def run_game(word_list: frozenset[str], answers: frozenset[str], daily: bool = F
 
     state = GameState(answer=answer)
 
-    while not is_game_over(state):
-        render(state)
-        guess = get_guess(word_list)
-        state = make_guess(state, guess)
+    try:
+        while not is_game_over(state):
+            render(state)
+            guess = get_guess(word_list)
+            state = make_guess(state, guess)
+    except PlayerQuit:
+        save_stats(stats)
+        raise
 
     render(state)
     stats = update_stats(stats, won=state.status == "won")
@@ -86,5 +99,5 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
-    except KeyboardInterrupt:
+    except (PlayerQuit, KeyboardInterrupt):
         print("\nThanks for playing!")

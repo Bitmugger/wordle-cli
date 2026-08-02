@@ -46,9 +46,9 @@ Each story must include **Acceptance Criteria** (bulleted checklist) and a **Not
 ## Displaying Tickets
 When the user asks to see tickets, fetch from GitHub and display as a markdown table sorted by issue ID:
 
-| # | Title | Priority | Status | Branch |
-|---|-------|----------|--------|--------|
-| 1 | Word list — curated five-letter words | High | Open | — |
+| # | Title | Status | Branch |
+|---|-------|--------|--------|
+| 8 | Word list — valid 5-letter words for guesses and answer pool | Open | — |
 
 Only deviate from this format if the user explicitly asks.
 

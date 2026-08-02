@@ -36,9 +36,12 @@ Each story must include **Acceptance Criteria** (bulleted checklist) and a **Not
 1. When starting a ticket: create a branch named `feature/<id>-<short-slug>`, set Status → `In Progress`, set Branch field.
 2. When work is done: set Status → `Done`, add Commit SHAs, close the issue.
 
+### Ticket Creation
+- **Never create GitHub issues without explicit user approval.** Propose the list of tickets (titles, priorities, rough scope) and wait for a green light before calling any create API.
+
 ### Branch Rules
-- One ticket per branch.
-- If the user asks to implement work spanning more than one ticket on the same branch, warn: "⚠️ This would put multiple tickets on one branch. Want to split into separate branches?"
+- One ticket per branch. No exceptions.
+- If work would span more than one ticket on the same branch, warn before proceeding: "⚠️ This would put multiple tickets on one branch. Want to split into separate branches?"
 
 ## Displaying Tickets
 When the user asks to see tickets, fetch from GitHub and display as a markdown table sorted by issue ID:

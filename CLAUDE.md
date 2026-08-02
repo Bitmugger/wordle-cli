@@ -26,7 +26,7 @@ Issues should be written as user stories where applicable:
 Each story must include **Acceptance Criteria** (bulleted checklist) and a **Notes** section for implementation hints or open questions.
 
 ### Field Definitions
-- **Status** — current state. Set to `In Progress` when work begins, `Done` when the issue is closed.
+- **Status** — current state. Valid values: `Open` → `In Progress` → `Merge-Needed` → `Done`.
 - **Priority** — `High` = core/blocking, `Medium` = important but not blocking, `Low` = polish or stretch goals.
 - **Estimate** — `Small` = a few minutes to an hour, `Medium` = a few hours, `Large` = a day or more.
 - **Branch** — the git branch being used for this ticket (e.g. `feature/1-word-list`). Update when work begins.
@@ -34,7 +34,12 @@ Each story must include **Acceptance Criteria** (bulleted checklist) and a **Not
 
 ### Workflow
 1. When starting a ticket: create a branch named `feature/<id>-<short-slug>`, set Status → `In Progress`, set Branch field.
-2. When work is done: set Status → `Done`, add Commit SHAs, close the issue.
+2. When all tests pass: set Status → `Merge-Needed`. Stop here and wait for the user to approve the merge.
+3. When the user approves: merge the feature branch into main, push, set Status → `Done`, add Commit SHAs, close the issue.
+
+### Merge Rules
+- **Never merge a feature branch into main without explicit user approval.**
+- The `Merge-Needed` status signals that a ticket is ready for review — do not proceed past this point autonomously.
 
 ### Ticket Creation
 - **Never create GitHub issues without explicit user approval.** Propose the list of tickets (titles, priorities, rough scope) and wait for a green light before calling any create API.

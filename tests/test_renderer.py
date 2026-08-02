@@ -3,7 +3,7 @@ import io
 import sys
 from unittest.mock import patch
 from game.engine import GameState, LetterResult, make_guess
-from cli.renderer import build_keyboard_state, render
+from cli.renderer import build_keyboard_state, render, render_legend
 
 C = LetterResult.CORRECT
 P = LetterResult.PRESENT
@@ -99,6 +99,44 @@ class TestRender(unittest.TestCase):
             self._capture(state)
         except Exception as e:
             self.fail(f"render() raised {e} on empty state")
+
+
+class TestRenderLegend(unittest.TestCase):
+    def _capture_legend(self, color=False):
+        buf = io.StringIO()
+        with patch("sys.stdout", buf):
+            render_legend(color)
+        return buf.getvalue()
+
+    def test_plain_text_contains_all_states(self):
+        output = self._capture_legend(color=False)
+        self.assertIn("Correct", output)
+        self.assertIn("Present", output)
+        self.assertIn("Absent", output)
+
+    def test_plain_text_has_no_ansi_codes(self):
+        output = self._capture_legend(color=False)
+        self.assertNotIn("\033[", output)
+
+    def test_color_contains_all_states(self):
+        output = self._capture_legend(color=True)
+        self.assertIn("Correct", output)
+        self.assertIn("Present", output)
+        self.assertIn("Absent", output)
+
+    def test_color_contains_ansi_codes(self):
+        output = self._capture_legend(color=True)
+        self.assertIn("\033[", output)
+
+    def test_render_includes_legend(self):
+        state = GameState(answer="WORLD")
+        with patch("cli.renderer._color_supported", return_value=False):
+            buf = io.StringIO()
+            with patch("sys.stdout", buf):
+                render(state)
+        self.assertIn("Correct", buf.getvalue())
+        self.assertIn("Present", buf.getvalue())
+        self.assertIn("Absent", buf.getvalue())
 
 
 if __name__ == "__main__":

@@ -48,6 +48,16 @@ def build_keyboard_state(state: GameState) -> dict[str, LetterResult]:
     return kb
 
 
+def render_legend(color: bool) -> None:
+    if color:
+        correct = f"{_GREEN} ■ {_RESET}"
+        present = f"{_YELLOW} ■ {_RESET}"
+        absent  = f"{_GRAY} ■ {_RESET}"
+        print(f"  {correct} Correct   {present} Present   {absent} Absent")
+    else:
+        print("  [G] Correct   [Y] Present   [.] Absent")
+
+
 def render(state: GameState) -> None:
     color = _color_supported()
 
@@ -80,4 +90,6 @@ def render(state: GameState) -> None:
                 keys.append(f" {ch} ")
         print("  " + " ".join(keys))
 
+    print()
+    render_legend(color)
     print()

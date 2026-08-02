@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch
 from main import get_guess, show_result, play_again, run_game
 from game.engine import GameState
+from persistence.stats import DEFAULT_STATS
 
 WORD_LIST = frozenset(["CRANE", "WORLD", "SLATE", "AUDIO", "JUMPY", "GREET"])
 ANSWERS   = frozenset(["WORLD", "CRANE", "SLATE"])
@@ -35,14 +36,14 @@ class TestShowResult(unittest.TestCase):
     def test_win_message(self):
         state = GameState(answer="WORLD", guesses=["WORLD"], status="won")
         with patch("builtins.print") as mock_print:
-            show_result(state)
+            show_result(state, DEFAULT_STATS.copy())
         output = " ".join(str(a) for call in mock_print.call_args_list for a in call[0])
         self.assertIn("1/6", output)
 
     def test_loss_message_shows_answer(self):
         state = GameState(answer="WORLD", status="lost")
         with patch("builtins.print") as mock_print:
-            show_result(state)
+            show_result(state, DEFAULT_STATS.copy())
         output = " ".join(str(a) for call in mock_print.call_args_list for a in call[0])
         self.assertIn("WORLD", output)
 

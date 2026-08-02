@@ -4,6 +4,7 @@ from pathlib import Path
 from words.words import load_word_list, is_valid_guess
 from game.engine import GameState, make_guess, is_game_over
 from cli.renderer import render
+from persistence.stats import load_stats, save_stats, update_stats, format_stats
 
 WORDS_DIR = Path(__file__).parent / "words"
 
@@ -19,12 +20,14 @@ def get_guess(word_list: frozenset[str]) -> str:
             return raw
 
 
-def show_result(state: GameState) -> None:
+def show_result(state: GameState, stats: dict) -> None:
     if state.status == "won":
         guess_count = len(state.guesses)
-        print(f"  You got it! Solved in {guess_count}/6.\n")
+        print(f"  You got it! Solved in {guess_count}/6.")
     else:
-        print(f"  The word was {state.answer}. Better luck next time!\n")
+        print(f"  The word was {state.answer}. Better luck next time!")
+    print(format_stats(stats))
+    print()
 
 
 def play_again() -> bool:
@@ -34,6 +37,7 @@ def play_again() -> bool:
 def run_game(word_list: frozenset[str], answers: frozenset[str]) -> str:
     answer = random.choice(sorted(answers))
     state  = GameState(answer=answer)
+    stats  = load_stats()
 
     while not is_game_over(state):
         render(state)
@@ -41,7 +45,9 @@ def run_game(word_list: frozenset[str], answers: frozenset[str]) -> str:
         state = make_guess(state, guess)
 
     render(state)
-    show_result(state)
+    stats = update_stats(stats, won=state.status == "won")
+    save_stats(stats)
+    show_result(state, stats)
     return state.status
 
 
